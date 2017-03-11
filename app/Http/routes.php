@@ -14,3 +14,16 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('Hello-world', function () {
+	return 'Hello-world';
+});
+
+Route::get('pengguna/{pengguna}', function($pengguna) {
+	return "Hello-world dari pengguna $pengguna";
+});
+
+Route::get('berita/{berita}', function ($berita = "laravel 5") // {} parameter
+{
+	return "berita $berita belum di baca";
+});
