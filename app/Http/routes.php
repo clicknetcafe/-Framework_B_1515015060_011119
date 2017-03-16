@@ -27,3 +27,25 @@ Route::get('berita/{berita}', function ($berita = "laravel 5") // {} parameter
 {
 	return "berita $berita belum di baca";
 });
+
+Route::get('Pengguna','PenggunaController@awal');
+Route::get('Pengguna/tambah','PenggunaController@tambah');
+Route::get('Pengguna/hapus','PenggunaController@hapus');
+
+Route::get('dosen','DosenController@awal');
+Route::get('dosen/tambah','DosenController@tambah');
+
+Route::get('mahasiswa','MahasiswaController@awal');
+Route::get('mahasiswa/tambah','MahasiswaController@tambah');
+
+Route::get('matakuliah','MatakuliahController@awal');
+Route::get('matakuliah/tambah','MatakuliahController@tambah');
+
+Route::get('dosenmatakuliah','DosenMatakuliahController@awal');
+Route::get('dosenmatakuliah/tambah','DosenMatakuliahController@tambah');
+
+Route::get('jadwalmatakuliah','JadwalMatakuliahController@awal');
+Route::get('jadwalmatakuliah/tambah','JadwalMatakuliahController@tambah');
+
+Route::get('ruangan','RuanganController@awal');
+Route::get('ruangan/tambah','RuanganController@tambah');
