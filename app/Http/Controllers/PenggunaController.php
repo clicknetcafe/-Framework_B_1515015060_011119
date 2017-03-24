@@ -10,30 +10,44 @@ use App\Pengguna;
 
 class PenggunaController extends Controller
 {
-    public function awal()
-	{	
-		return "Hello dari Hirano";
-	}
-	public function tambah()
-	{
-		return $this->simpan();
-	}
-	public function simpan()
-	{
-		$pengguna = new Pengguna();
-		$pengguna->username = 'don_jon';
-		$pengguna->password = 'jon_don';
-		$pengguna->save();
-		return "data dengan username {$pengguna->username} telah disimpan";
-	}
-	public function hapus()
-	{
-		return $this->delete();
-	}
-	public function delete()
-	{
-		$pengguna = new pengguna();
-		$pengguna = pengguna::find(2);
-		$pengguna->delete();
-	}
+    
+    public function awal(){
+    	return view('pengguna.awal',['data'=>Pengguna::all()]);
+    }
+    public function tambah(){
+    	return view('pengguna.tambah');
+    }
+    public function simpan(Request $input){
+    	$pengguna = new Pengguna();
+    	$pengguna->username = $input->username;
+    	$pengguna->password = $input->password;
+    	$informasi = $pengguna->save() ? 'Berhasil simpan data' : 'Gagal simpan data';
+        return redirect('pengguna')->with(['informasi'=>$informasi]);
+
+    }
+    public function edit($id)
+    {
+        $pengguna = Pengguna::find($id);
+        return view('pengguna.edit')->with(array('pengguna'=>$pengguna));
+    }
+    public function lihat($id)
+    {
+        $pengguna = Pengguna::find($id);
+        return view('pengguna.lihat')->with(array('pengguna'=>$pengguna));
+
+    }
+    public function update($id, Request $input)
+    {
+        $pengguna = Pengguna::find($id);
+        $pengguna ->username = $input->username;
+        $pengguna ->password = $input->password;
+        $informasi = $pengguna->save() ? 'Berhasil update data' : 'Gagal update data';
+        return redirect('pengguna')->with(['informasi'=>$informasi]);
+    }
+    public function hapus($id)
+    {
+        $pengguna = Pengguna::find($id);
+        $informasi = $pengguna->delete() ? 'Berhasil hapus data' : 'Gagal hapus data';
+        return redirect('pengguna')->with(['informasi'=>$informasi]);
+    }
 }
