@@ -48,6 +48,7 @@ Route::get('matakuliah/hapus/{matakuliah}','Matakuliahcontroller@hapus');
 Route::get('dosen_matakuliah', 'Dosen_matakuliahController@awal');
 Route::get('dosen_matakuliah/tambah', 'Dosen_matakuliahController@tambah');
 
-Route::get('jadwal_matakuliah', 'Jadwal_matakuliahController@awal');
-Route::get('jadwal_matakuliah/tambah', 'Jadwal_matakuliahController@tambah');
+Route::get('jadwal_mahasiswa', 'Jadwal_mahasiswaController@awal');
+Route::get('jadwal_mahasiswa/tambah', 'Jadwal_mahasiswaController@tambah');
 
+Route::get('mahasiswa_pengguna','MahasiswaController@mahasiswa');
