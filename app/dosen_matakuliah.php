@@ -4,24 +4,39 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Dosen_matakuliah extends Model
+class dosen_matakuliah extends Model
 {
-    protected $table = 'Dosen_matakuliah';
-    protected $fillable = ['dosen_id','matakuliah_id'];
-
-    public function matakuliah() //menambah fungsi matakuliah()
-    {
-        return $this->belongsTo(Matakuliah::class);
-    }   //belongsTo artinya ada field sebagai foreign key (matakuliah_id) dengan primary keynya di tabel matakuliah
+    //
+    protected $table = 'dosen_matakuliah';
+    protected $guarded = ['id'];
 
     public function dosen() //menambah fungsi dosen()
     {
-    	return $this->belongsTo(Dosen::class);
-    }   //mengambil primarykey dari table model Dosen
+    	return $this->belongsTo(dosen::class);
+        //mengambil primarykey dari table model Dosen
+    }
 
-    public function jadwal_mahasiswa() //menambah fungsi mahasiswa()
+    public function matakuliah() //menambah fungsi matakuliah()
     {
-    	return $this->hasMany(Jadwal_mahasiswa::class);
-    }   //id_dosen matakuliah sebagai foreign key ke tabel Jadwal_mahasiswa 
-}
+    {
+    	return $this->belongsTo(matakuliah::class);
+        //belongsTo artinya ada field sebagai foreign key (matakuliah_id) dengan primary keynya di tabel matakuliah
 
+    }
+
+    public function jadwal_matakuliah() //menambah fungsi matakuliah()
+    {
+    	return $this->hasMany(jadwal_matakuliah::class);
+        
+    }
+
+    public function listdosenmatakuliah()
+    {
+        $out = [];
+        foreach ($this->all() as $dsnmtk)
+        {
+            $out[$dsnmtk->id] = "{$dsnmtk->dosen->nama} (matakuliah {$dsnmtk->matakuliah->title})";
+        }
+        return $out;
+    }
+}

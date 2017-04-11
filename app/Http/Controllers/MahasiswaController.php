@@ -6,37 +6,76 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Mahasiswa;
+use App\mahasiswa;
 
-class MahasiswaController extends Controller
+use App\pengguna;
+
+class mahasiswacontroller extends Controller
 {
-    public function awal(){
-    	return "Hello dari MahasiswaController";
-    }
-    public function tambah(){
-    	return $this->simpan();
-    }
-    public function simpan(){
-    	$mahasiswa = new Mahasiswa();
-    	$mahasiswa->nama = "Syahrul Andi Subakti";
-    	$mahasiswa->nim = "1515015060";
-    	$mahasiswa->alamat = "Loa Buah RT.6 Sungai Kunjang";
-    	$mahasiswa->pengguna_id = 3;
-    	$mahasiswa->save();
-    	return "Data Mahasiswa dengan Nama {$mahasiswa->nama} telah disimpan";
-    }
-    public function mahasiswa()
+    protected $informasi = 'Gagal melakukan aksi';
+    public function awal()
     {
-        $mahasiswa = mahasiswa::all();
-        //dd($mahasiswa);
-        foreach ($mahasiswa as $mhs) {
-
-        
-        echo "Nama : ".$mhs->nama;
-        echo "<br>";
-        echo "Username : ".$mhs->pengguna->username;
-        echo "<br>";
+        $semuaMahasiswa = mahasiswa::all();
+        return view('mahasiswa.awal', compact('semuaMahasiswa'));
+    }
+    public function tambah()
+    {
+        return view('mahasiswa.tambah');
+    }
+    public function simpan(Request $input)
+    {
+        $pengguna = new pengguna($input->only('username','password'));
+        if($pengguna->save())
+        {
+            $mahasiswa = new mahasiswa;
+            $mahasiswa->nama= $input->nama;
+            $mahasiswa->nim= $input->nim;
+            $mahasiswa->alamat= $input->alamat;
+            if($pengguna->mahasiswa()->save($mahasiswa)) $informasi = 'berhasil simpan data';
         }
 
+        return redirect('mahasiswa')->with(['informasi' =>$informasi]);
+    }
+    public function edit($id)
+    {
+        $mahasiswa = mahasiswa::find($id);
+        return view('mahasiswa.edit')->with(array('mahasiswa'=>$mahasiswa));
+    }
+
+    public function lihat($id)
+    {
+        $mahasiswa = mahasiswa::find($id);
+        return view('mahasiswa.lihat')->with(array('mahasiswa'=>$mahasiswa));
+    }
+
+    public function update($id,Request $input)
+    {
+        $mahasiswa = mahasiswa::find($id);
+        $mahasiswa->nama = $input->nama;
+        $mahasiswa->nim = $input->nim;
+        $mahasiswa->alamat= $input->alamat;
+        $mahasiswa->save();
+        if(!is_null($input->username))
+        {
+            $pengguna = $mahasiswa->pengguna->fill($input->only('username'));
+        if(!empty($input->password)) 
+            $pengguna->password = $input->password;
+        if($pengguna->save()) 
+            $this->informasi = 'berhasil simpan data';
+        }
+        else
+        {
+            $this->informasi = 'berhasil simpan data';
+        }
+        return redirect('mahasiswa')->with(['informasi'=>$this->informasi]);
+    }
+    public function hapus($id)
+    {
+        $mahasiswa = mahasiswa::find($id);
+        if($mahasiswa->pengguna()->delete())
+        {
+            if($mahasiswa->delete()) $this->informasi = 'berhasil hapus data';
+        }
+        return redirect('mahasiswa')->with(['informasi' => $this->informasi]);
     }
 }

@@ -4,22 +4,37 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Mahasiswa extends Model
+class mahasiswa extends Model
 {
-    protected $table = 'Mahasiswa';
-    protected $fillable = ['nama','nim','alamat','pengguna_id'];
+    protected $table = 'mahasiswa';
+    //protected $fillable = ['nim','nama','alamat','pengguna_id'];
+    protected $guarded = ['id'];
 
-    /* fungsi pengguna untuk merelasikan dengan model Pengguna dengan acuan field "pengguna_id" */
-    public function pengguna()
+    public function pengguna() //membuat fungsi dengan nama pengguna
     {
-        return $this->belongsTo(Pengguna::class);
+    	return $this->belongsTo(pengguna::class);
+        //kebalikan dari hasone di pengguna
     }
 
-    /* fungsi jadwal_mahasiswa yang mempunyai relasi 1 to many dengan model Jadwal_mahasiswa
-         dimana setiap mahasiswa dapat mempunyai banyak jadwal*/
-    public function jadwal_mahasiswa()
+    public function jadwal_matakuliah() //membuat fungsi dengan nama jadwal_matakuliah
     {
-        return $this->hasMany(Jadwal_mahasiswa::class);
+    	return $this->hasMany(jadwal_matakuliah::class);
+        //one to Many dari Mahasiswa (one) ke Jadwal matakuliah (many)
+
+    }
+
+    public function getusernameAttribute()
+    {
+        return $this->pengguna->username;
+    }
+    
+    public function listmahasiswadannim()
+    {
+        $out = [];
+        foreach ($this->all() as $mhs)
+        {
+            $out[$mhs->id] = "{$mhs->nama} ({$mhs->nim})";
+        }
+        return $out;
     }
 }
-
