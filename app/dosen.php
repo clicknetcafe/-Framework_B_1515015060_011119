@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class dosen extends Model
 {
     //
-    protected $table = 'dosen';\
+    protected $table = 'dosen';
     protected $guarded = ['id'];
 
     public function pengguna() //membuat fungsi dengan nama pengguna

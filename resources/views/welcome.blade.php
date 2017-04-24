@@ -38,7 +38,7 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">ANDIROYD</div>
+                <div class="title">Syahrul Andi Subakti</div>
             </div>
         </div>
     </body>

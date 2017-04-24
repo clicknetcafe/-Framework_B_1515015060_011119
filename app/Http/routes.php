@@ -1,5 +1,9 @@
 <?php
-
+use Illuminate\Http\Requests;
+Route::get('/login','SesiController@form');
+Route::post('/login','SesiController@validasi');
+Route::get('/logout','SesiController@logout');
+// Route::get('/','SesiController@index');
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -10,14 +14,46 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('mahasiswa_pengguna','mahasiswaController@mahasiswa');
-Route::get('_pengguna','penggunacontroller@tampil');
 
-Route::get('/', function () {
-    return view('welcome');
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+
+
+Route::get('ujihas','RelationshipRebornController@ujihas');
+Route::get('ujidoesnthave','RelationshipRebornController@ujidoesnthave');
+Route::get('ujimhs','RelationshipRebornController@ujimhs');
+Route::get('wherehas',function()
+{
+	return \App\dosen_matakuliah::whereHas('dosen',function($querry)
+	{
+		$querry->where('nama','like','%s%');
+	})
+	->orWhereHas('matakuliah',function($query)
+	{
+		$query->where('title','like','%a%');
+	})
+	->with('dosen','matakuliah')
+	->groupBy('dosen_id')
+	->get();
 });
 
-Route::get('pengguna', 'PenggunaController@awal');
+Route::get('hashas/{ket}',function($ket)
+{
+	return \App\dosen_matakuliah::whereHas('matakuliah',function($querry)
+	{
+		$querry->where('keterangan',$ket);
+	})->with('matakuliah')->groupBy('matakuliah_id')->get();
+});
+
+Route::group(['middleware'=>'AutentifikasiUser'],function()
+{
+	Route::get('/','SesiController@index');
+	Route::get('pengguna', 'PenggunaController@awal');
+Route::get('mahasiswa_pengguna','mahasiswaController@mahasiswa');
+Route::get('_pengguna','penggunacontroller@tampil');
 Route::get('pengguna/tambah', 'PenggunaController@tambah');
 Route::get('pengguna/{pengguna}','PenggunaController@lihat');
 Route::post('pengguna/simpan','PenggunaController@simpan');
@@ -72,3 +108,4 @@ Route::post('jadwal_matakuliah/simpan','jadwal_matakuliahcontroller@simpan');
 Route::get('jadwal_matakuliah/edit/{jadwal_matakuliah}','jadwal_matakuliahcontroller@edit');
 Route::post('jadwal_matakuliah/edit/{jadwal_matakuliah}','jadwal_matakuliahcontroller@update');
 Route::get('jadwal_matakuliah/hapus/{jadwal_matakuliah}','jadwal_matakuliahcontroller@hapus');
+});
